@@ -245,7 +245,7 @@ def createChild(appID, name, isLowPriority, lowPriorityThreshold)
     def child = getChildDevice("GameTimeChildDevice${appID}")    
     if (!child) {
         String childNetworkID = "GameTimeChildDevice${appID}"
-        def newChild = addChildDevice("lnjustin", "GameTime Child", childNetworkID, [label:name, isComponent:true, name:name])
+        def newChild = addChildDevice("Compgeek", "GameTime Child", childNetworkID, [label:name, isComponent:true, name:name])
         newChild.configurePriority(isLowPriority, lowPriorityThreshold)
     }
     else {

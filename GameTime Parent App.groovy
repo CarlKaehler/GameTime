@@ -242,7 +242,7 @@ def createParentDevice()
     def parent = getChildDevice("GameTimeParentDevice${app.id}")
     if (!parent) {
         String parentNetworkID = "GameTimeParentDevice${app.id}"
-        parent = addChildDevice("lnjustin", "GameTime", parentNetworkID, [label:"GameTime", isComponent:true, name:"GameTime"])
+        parent = addChildDevice("Compgeek", "GameTime", parentNetworkID, [label:"GameTime", isComponent:true, name:"GameTime"])
         if (parent) {
             parent.updateSetting("parentID", app.id)
             logDebug("Created GameTime Parent Device")
