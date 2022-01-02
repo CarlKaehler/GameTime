@@ -32,14 +32,15 @@
  *  v1.5.2 - Fixes issue with updating tile after the last game of the season
  *  v1.5.3 - Fixes issue with tile font size configurability
  *  v1.5.4 - Added Uninstall Confirmation; Added Update Interval Configurability
+ *  v1.5.5 - Updated Branding (Initial Code Steal :))
  */
 import java.text.SimpleDateFormat
 import groovy.transform.Field
 
 definition(
     name: "GameTime",
-    namespace: "lnjustin",
-    author: "Justin Leonard",
+    namespace: "Compgeek",
+    author: "Carl Kaehler",
     description: "GameTime Tracker for College and Professional Sports",
     category: "My Apps",
     oauth: [displayName: "GameTime", displayLink: ""],
@@ -62,10 +63,10 @@ def mainPage() {
 		    if(state.appInstalled == 'COMPLETE'){       
                 section (getInterface("header", " GameTime")) {
 			        section(getInterface("header", " College Sports")) {
-				        app(name: "anyOpenApp", appName: "GameTime College Instance", namespace: "lnjustin", title: "<b>Add a new GameTime instance for college sports</b>", multiple: true)
+				        app(name: "anyOpenApp", appName: "GameTime College Instance", namespace: "Compgeek", title: "<b>Add a new GameTime instance for college sports</b>", multiple: true)
 			        }
                     section(getInterface("header", " Professional Sports")) {
-				        app(name: "anyOpenApp", appName: "GameTime Professional Instance", namespace: "lnjustin", title: "<b>Add a new GameTime instance for professional sports</b>", multiple: true)
+				        app(name: "anyOpenApp", appName: "GameTime Professional Instance", namespace: "Compgeek", title: "<b>Add a new GameTime instance for professional sports</b>", multiple: true)
 			        } 
                     section("") { 
                         paragraph getInterface("note", txt="After installing or updating your team(s) above, be sure to click the DONE button below.")

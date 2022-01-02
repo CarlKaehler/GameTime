@@ -32,6 +32,8 @@
  *  v1.5.2 - Fixes issue with updating tile after the last game of the season
  *  v1.5.3 - Fixes issue with tile font size configurability
  *  v1.5.4 - Added Uninstall Confirmation; Added Update Interval Configurability
+ *  v1.5.5 - Updated Branding (Initial Code Steal :))
+ *  v1.5.6 - Added Channel attribute 
  */
 import java.text.SimpleDateFormat
 import groovy.transform.Field
@@ -39,9 +41,9 @@ import groovy.time.TimeCategory
 
 definition(
     name: "GameTime Professional Instance",
-    parent: "lnjustin:GameTime",
-    namespace: "lnjustin",
-    author: "Justin Leonard",
+    parent: "Compgeek:GameTime",
+    namespace: "Compgeek",
+    author: "Carl Kaehler",
     description: "GameTime Tracker for College and Professional Sports",
     category: "My Apps",
     oauth: [displayName: "GameTime", displayLink: ""],
@@ -765,7 +767,8 @@ def updateDisplayedGame() {
     def switchValue = getSwitchValue()  
     def tile = getGameTile(game)
     def scheduleTile = getScheduleTile()
-    updateDevice([game: game, switchValue: switchValue, tile: tile, scheduleTile: scheduleTile])    
+    def channel = getGameChannel(game)
+    updateDevice([game: game, switchValue: switchValue, tile: tile, scheduleTile: scheduleTile, channel: channel])    
 }
 
 def getDateOfNextDayOfWeek(startDate, nextDayOfWeek) {
@@ -782,6 +785,9 @@ def getDateOfNextDayOfWeek(startDate, nextDayOfWeek) {
     return next
 }
 
+def getGameChannel(game) {
+    return (game.channel != "null" && game.channel != null) ? game.channel : "No Data"
+}
 
 def getNumDaysLaterAtTime(startDate, numDaysLater, atHour, atMinutes) {
     // atTimeHour Integer 0-23, atTimeMinutes Integer 0-59

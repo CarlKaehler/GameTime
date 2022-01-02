@@ -32,11 +32,13 @@
  *  v1.5.2 - Fixes issue with updating tile after the last game of the season
  *  v1.5.3 - Fixes issue with tile font size configurability
  *  v1.5.4 - Added Uninstall Confirmation; Added Update Interval Configurability
+ *  v1.5.5 - Updated Branding (Initial Code Steal :))
+ *  v1.5.6 - Added Channel attribute
 **/
 
 metadata
 {
-    definition(name: "GameTime Child", namespace: "lnjustin", author: "Justin Leonard", importUrl: "")
+    definition(name: "GameTime Child", namespace: "Compgeek", author: "Carl Kaehler", importUrl: "")
     {
         capability "Actuator"
         capability "Switch"
@@ -50,6 +52,7 @@ metadata
         attribute "status", "string"     
         attribute "opponent", "string" 
         
+        attribute "channel", "string"
     }
 }
 
@@ -102,6 +105,7 @@ def updateDevice(appID, data, scheduleData = null) {
     sendEvent(name: "tile", value: data.tile)
     sendEvent(name: "schedule", value: data.scheduleTile)
     sendEvent(name: "switch", value: data.switchValue)
+    sendEvent(name: "channel", value: data.channel)
 }
 
 def pushButton(buttonNum) {

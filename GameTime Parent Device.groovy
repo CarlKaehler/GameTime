@@ -32,11 +32,13 @@
  *  v1.5.2 - Fixes issue with updating tile after the last game of the season
  *  v1.5.3 - Fixes issue with tile font size configurability
  *  v1.5.4 - Added Uninstall Confirmation; Added Update Interval Configurability
+ *  v1.5.5 - Updated Branding (Initial Code Steal :))
+ *  v1.5.6 - Added Channel attribute 
 **/
 
 metadata
 {
-    definition(name: "GameTime", namespace: "lnjustin", author: "Justin Leonard", importUrl: "")
+    definition(name: "GameTime", namespace: "Compgeek", author: "Carl Kaehler", importUrl: "")
     {
         capability "Actuator"
         capability "Switch"
@@ -49,6 +51,7 @@ metadata
         attribute "status", "string"                    
         attribute "opponent", "string"  
 
+        attribute "channel", "string"
     }
 }
 
@@ -222,7 +225,8 @@ def clearParent() {
     sendEvent(name: "schedule", value: "<div style='overflow:auto;height:90%'></div>")
     sendEvent(name: "status", value: "No Game Scheduled")
     sendEvent(name: "opponent", value: "No Game Scheduled")
-    sendEvent(name: "switch", value: "off")    
+    sendEvent(name: "switch", value: "off")
+    sendEvent(name: "channel", value: "No Game Scheduled")
 }
 
 def copyChild(child) {
@@ -232,7 +236,8 @@ def copyChild(child) {
     sendEvent(name: "schedule", value: child.currentValue("schedule"))
     sendEvent(name: "status", value: child.currentValue("status"))
     sendEvent(name: "opponent", value: child.currentValue("opponent"))
-    sendEvent(name: "switch", value: child.currentValue("switch"))    
+    sendEvent(name: "switch", value: child.currentValue("switch"))
+    sendEvent(name: "channel", value: child.currentValue("channel")) 
 }
 
 def createChild(appID, name, isLowPriority, lowPriorityThreshold)
