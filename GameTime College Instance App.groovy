@@ -73,7 +73,7 @@ def getScheduleEndpoint() {
 }
 
 def getUpdateInterval() {
-    return settings['updateInterval'] != null ? settings['updateInterval'] : 600
+    return settings['updateInterval'] != null ? settings['updateInterval'] * 60 : 600
 }
 
 def instantiateToken() {
@@ -899,7 +899,8 @@ def updateGameInProgress() {
             state.nextGame.progress = updatedGameData.progress
             state.nextGame.status = updatedGameData.status
         }
-        updateDevice([game: state.nextGame, switchValue: getSwitchValue(), tile: getGameTile(state.nextGame), scheduleTile: getScheduleTile()])
+        def channel = getGameChannel(state.nextGame)
+        updateDevice([game: state.nextGame, switchValue: getSwitchValue(), tile: getGameTile(state.nextGame), scheduleTile: getScheduleTile(), channel: channel])
         scheduleUpdate(true)
     }
 }
