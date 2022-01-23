@@ -1214,7 +1214,7 @@ def getBroadcastChannel(game)
         //list least to most desirable for fall through
         if (channels.contains('TSN4')) channel = 'TSN4'
         if (channels.contains('SN360')) channel = 'SN360'
-        if (channels.contains('SNO)) channel = 'SNO'
+        if (channels.contains('SNO')) channel = 'SNO'
         if (channels.contains('CBC')) channel = 'CBC'
     } else {
         channel = game.Channel
