@@ -1191,7 +1191,7 @@ def getNhlId(tm)
 {
     def id = null
     def fullTeams = sendNhlApiRequest("/teams")
-    for (team in fullTeams) {
+    for (team in fullTeams.teams) {
         if (tm.Name == team.teamName) {
             id = team.id
             break
