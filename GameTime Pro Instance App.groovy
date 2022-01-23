@@ -1192,7 +1192,7 @@ def getNhlId(tm)
     def id = null
     def fullTeams = sendNhlApiRequest("/teams")
     for (team in fullTeams.teams) {
-        if (tm.Name == team.teamName) {
+        if (tm.name == team.teamName) {
             id = team.id
             break
         }
@@ -1202,12 +1202,13 @@ def getNhlId(tm)
 
 def getBroadcastChannel(game)
 {
-    def channel = null
+    def channel = game.Channel
     if (league == "NHL") {
         def channels = []
         def gameDateObj = getDateObj(game.Day)
-        def gameDate = gameDateObj.toString('yyyy-MM-dd')
-        def nhlSchedule = sendNhlApiRequest("/schedule?teamId=${state.teams.nhlId}&date=${gameDate}&expand=schedule.broadcasts.all")
+        def gameDate = gameDateObj.format('yyyy-MM-dd')
+        def queryString = "teamId=${state.team.nhlId}&date=${gameDate}&expand=schedule.broadcasts.all"
+        def nhlSchedule = sendNhlApiRequest("/schedule", queryString.toString())
         for (ch in nhlSchedule.dates[0].games[0].broadcasts) {
             channels.add(ch.name)
         }
@@ -1216,27 +1217,26 @@ def getBroadcastChannel(game)
         if (channels.contains('SN360')) channel = 'SN360'
         if (channels.contains('SNO')) channel = 'SNO'
         if (channels.contains('CBC')) channel = 'CBC'
-    } else {
-        channel = game.Channel
     }
     return channel
 }
 
-def sendNhlApiRequest(path)
+def sendNhlApiRequest(path, queryString = "")
 {
     def params = [
 		uri: "https://statsapi.web.nhl.com/",
-        path: "api/v1/" + path,
+        path: "api/v1" + path,
 		contentType: "application/json",
 		timeout: 1000
 	]
+    if (queryString != "") params.put("queryString", queryString)
 
     if (body != null)
         params.body = body
 
     def result = null
     logDebug("Api Call: ${params}")
-    parent.countAPICall(league)
+    //parent.countAPICall(league)
     try
     {
         httpGet(params) { resp ->
@@ -1245,7 +1245,7 @@ def sendNhlApiRequest(path)
     }
     catch (Exception e)
     {
-        log.warn "sendApiRequest() failed: ${e.message}"
+        log.warn "sendNhlApiRequest() failed: ${e.message}"
         return "Error: ${e.message}"
     }   
     return result
