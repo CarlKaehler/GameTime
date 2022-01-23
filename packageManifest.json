@@ -32,7 +32,7 @@
       "required": true,
       "oauth": true,
       "primary": false,
-      "version": "1.5.6"
+      "version": "1.5.7"
     }
   ],
   "drivers": [

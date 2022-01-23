@@ -34,6 +34,7 @@
  *  v1.5.4 - Added Uninstall Confirmation; Added Update Interval Configurability
  *  v1.5.5 - Updated Branding (Initial Code Steal :))
  *  v1.5.6 - Added Channel attribute 
+ *  v1.5.7 - Added NHL Channel Lookup fron NHL API
  */
 import java.text.SimpleDateFormat
 import groovy.transform.Field
@@ -651,7 +652,7 @@ def getGameData(game) {
         def gameTime = getGameTime(game)
         def gameTimeStr = getGameTimeStr(gameTime)        
         def status = game.Status
-        def channel = game.Channel
+        def channel = getBroadcastChannel(game)
         def progress = (status == "InProgress") ? getProgress(game) : null
         
         def homeTeam = state.teams[game.HomeTeam]
@@ -1066,6 +1067,11 @@ def getTeamOptions() {
 def setMyTeam() {
     state.teams.each { key, tm ->
         if(settings["team"] == tm.displayName) {
+            if (league == "NHL") {
+                nhlId = getNhlId(tm)
+                tm.put("nhlId", nhlId)
+                logDebug("Adding NHL ID to game to team object: ${tm.toString()}")
+            }
             state.team = tm
         }
     }
@@ -1179,6 +1185,70 @@ def createChild()
 def deleteChild()
 {
     parent.deleteChildDevice(app.id)
+}
+
+def getNhlId(tm)
+{
+    def id = null
+    def fullTeams = sendNhlApiRequest("/teams")
+    for (team in fullTeams) {
+        if (tm.Name == team.teamName) {
+            id = team.id
+            break
+        }
+   }
+   return id
+}
+
+def getBroadcastChannel(game)
+{
+    def channel = null
+    if (league == "NHL") {
+        def channels = []
+        def gameDateObj = getDateObj(game.Day)
+        def gameDate = gameDateObj.toString('yyyy-MM-dd')
+        def nhlSchedule = sendNhlApiRequest("/schedule?teamId=${state.teams.nhlId}&date=${gameDate}&expand=schedule.broadcasts.all")
+        for (ch in nhlSchedule.dates[0].games[0].broadcasts) {
+            channels.add(ch.name)
+        }
+        //list least to most desirable for fall through
+        if (channels.contains('TSN4')) channel = 'TSN4'
+        if (channels.contains('SN360')) channel = 'SN360'
+        if (channels.contains('SNO)) channel = 'SNO'
+        if (channels.contains('CBC')) channel = 'CBC'
+    } else {
+        channel = game.Channel
+    }
+    return channel
+}
+
+def sendNhlApiRequest(path)
+{
+    def params = [
+		uri: "https://statsapi.web.nhl.com/",
+        path: "api/v1/" + path,
+		contentType: "application/json",
+		timeout: 1000
+	]
+
+    if (body != null)
+        params.body = body
+
+    def result = null
+    logDebug("Api Call: ${params}")
+    parent.countAPICall(league)
+    try
+    {
+        httpGet(params) { resp ->
+        result = resp.data
+        }                
+    }
+    catch (Exception e)
+    {
+        log.warn "sendApiRequest() failed: ${e.message}"
+        return "Error: ${e.message}"
+    }   
+    return result
 }
 
 def sendApiRequest(path)
